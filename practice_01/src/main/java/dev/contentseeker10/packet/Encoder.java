@@ -4,16 +4,17 @@ import dev.contentseeker10.crypto.Crc16;
 import dev.contentseeker10.crypto.CryptoService;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class Encoder {
 
     public static final byte MAGIC = 0x13;
 
     public static byte[] encode(Packet packet) {
-        ByteBuffer messageBuffer = ByteBuffer.allocate(packet.getLength());
+        byte[] payload = packet.getMessage().getPayload().getBytes(StandardCharsets.UTF_8);
+        ByteBuffer messageBuffer = ByteBuffer.allocate(payload.length + 8);
         messageBuffer.putInt(packet.getMessage().getCmdType());
         messageBuffer.putInt(packet.getMessage().getUserId());
-        byte[] payload = packet.getMessage().getPayload().getBytes();
         messageBuffer.put(payload);
 
         byte[] encryptedMessage = CryptoService.encrypt(messageBuffer.array());
@@ -27,7 +28,7 @@ public class Encoder {
         short headerCrc16 = Crc16.calculateSrc(headerBuffer.array());
 
         ByteBuffer result = ByteBuffer.allocate(calcSize(encryptedMessage.length));
-        result.put(headerBuffer);
+        result.put(headerBuffer.array());
         result.putShort(headerCrc16);
         result.put(encryptedMessage);
         result.putShort(messageCrc16);

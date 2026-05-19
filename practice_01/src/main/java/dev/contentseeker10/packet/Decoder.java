@@ -4,6 +4,7 @@ import dev.contentseeker10.crypto.Crc16;
 import dev.contentseeker10.crypto.CryptoService;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class Decoder {
 
@@ -36,7 +37,7 @@ public class Decoder {
         int userId = messageBuffer.getInt();
         byte[] payloadBytes = new byte[decryptedMessage.length - 8];
         messageBuffer.get(payloadBytes);
-        String payload = new String(payloadBytes);
+        String payload = new String(payloadBytes, StandardCharsets.UTF_8);
 
         Message message = new Message(cmdType, userId, payload);
         return new Packet(magic, source, packetId, length, message);
