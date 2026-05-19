@@ -1,5 +1,8 @@
 package dev.contentseeker10.packet;
 
+import dev.contentseeker10.crypto.Crc16;
+import dev.contentseeker10.crypto.CryptoService;
+
 import java.nio.ByteBuffer;
 
 public class Encoder {
@@ -7,21 +10,29 @@ public class Encoder {
     public static final byte MAGIC = 0x13;
 
     public static byte[] encode(Packet packet) {
-        ByteBuffer buffer = ByteBuffer.allocate(calcSize(packet.getLength()));
-
-        buffer.put(MAGIC);
-        buffer.put(packet.getSource());
-        buffer.putLong(packet.getPacketId());
-        buffer.putInt(packet.getLength());
-        buffer.putShort(packet.getHeaderCrc16());
-
-        buffer.putInt(packet.getMessage().getCmdType());
-        buffer.putInt(packet.getMessage().getUserId());
+        ByteBuffer messageBuffer = ByteBuffer.allocate(packet.getLength());
+        messageBuffer.putInt(packet.getMessage().getCmdType());
+        messageBuffer.putInt(packet.getMessage().getUserId());
         byte[] payload = packet.getMessage().getPayload().getBytes();
-        buffer.put(payload);
-        buffer.putShort(packet.getMessageCrc16());
+        messageBuffer.put(payload);
 
-        return buffer.array();
+        byte[] encryptedMessage = CryptoService.encrypt(messageBuffer.array());
+        short messageCrc16 = Crc16.calculateSrc(encryptedMessage);
+
+        ByteBuffer headerBuffer = ByteBuffer.allocate(1 + 1 + 8 + 4);
+        headerBuffer.put(packet.getMagic());
+        headerBuffer.put(packet.getSource());
+        headerBuffer.putLong(packet.getPacketId());
+        headerBuffer.putInt(encryptedMessage.length);
+        short headerCrc16 = Crc16.calculateSrc(headerBuffer.array());
+
+        ByteBuffer result = ByteBuffer.allocate(calcSize(encryptedMessage.length));
+        result.put(headerBuffer);
+        result.putShort(headerCrc16);
+        result.put(encryptedMessage);
+        result.putShort(messageCrc16);
+
+        return result.array();
     }
 
     private static int calcSize(int messageLength) {
