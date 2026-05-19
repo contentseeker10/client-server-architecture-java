@@ -1,0 +1,22 @@
+# Bytecode and target directories
+target/
+build/
+
+# IDE files (IntelliJ IDEA)
+.idea/
+
+# Eclipse files
+.classpath
+.project
+
+# Maven wrapper files (if present)
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs and OS specific files
+*.log
+.DS_Store
+
+# Compiled Java files
+*.class
+src/main/java/**/*.class
+src/test/java/**/*.class
