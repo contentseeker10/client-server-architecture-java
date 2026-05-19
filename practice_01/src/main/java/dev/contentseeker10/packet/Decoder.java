@@ -40,7 +40,7 @@ public class Decoder {
         String payload = new String(payloadBytes, StandardCharsets.UTF_8);
 
         Message message = new Message(cmdType, userId, payload);
-        return new Packet(magic, source, packetId, length, message);
+        return new Packet(magic, source, packetId, message);
     }
 
     private static void checkMagic(byte magic) {

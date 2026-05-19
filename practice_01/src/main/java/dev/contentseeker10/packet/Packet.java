@@ -1,8 +1,6 @@
 package dev.contentseeker10.packet;
 
-import dev.contentseeker10.crypto.Crc16;
-
-import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class Packet {
 
@@ -12,11 +10,11 @@ public class Packet {
     private final int length;
     private final Message message;
 
-    public Packet(byte magic, byte source, long packetId, int length, Message message) {
+    public Packet(byte magic, byte source, long packetId, Message message) {
         this.magic = magic;
         this.source = source;
         this.packetId = packetId;
-        this.length = length;
+        this.length = message.getPayload().getBytes(StandardCharsets.UTF_8).length;
         this.message = message;
     }
 
