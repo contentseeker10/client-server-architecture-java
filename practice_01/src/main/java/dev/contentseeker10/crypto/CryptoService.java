@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 public class CryptoService {
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
-    private static final byte[] KEY = "SecretKey1234567".getBytes(StandardCharsets.UTF_8);
-    private static final byte[] IV = "InitVector123456".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] KEY = "dXNy4fSZ6UEJaYrg".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] IV = "LEYDjkVO9srppUzd".getBytes(StandardCharsets.UTF_8);
 
     public static byte[] encrypt(byte[] rawData) {
         try {
