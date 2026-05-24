@@ -11,3 +11,7 @@ Custom Packet with Encryptor/Decryptor and Encoder/Decoder
 ### Practice 2: 
 
 Fix of concurrency logic of Tik-Tak-Toy program
+
+### Homework 2:
+
+Warehouse Service pipeline via custom Packets (no-network)
