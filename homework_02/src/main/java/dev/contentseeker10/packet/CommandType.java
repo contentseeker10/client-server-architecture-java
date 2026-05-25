@@ -1,6 +1,10 @@
 package dev.contentseeker10.packet;
 
 public enum CommandType {
+    UNKNOWN(-1),
+
+    RESPONSE(0),
+
     GET_AMOUNT(1),
     WRITE_OFF(2),
     WRITE_ON(3),
@@ -16,5 +20,17 @@ public enum CommandType {
 
     public int getCode() {
         return code;
+    }
+
+    public static CommandType fromCode(int code) {
+        return switch (code) {
+            case 1 -> GET_AMOUNT;
+            case 2 -> WRITE_OFF;
+            case 3 -> WRITE_ON;
+            case 4 -> ADD_GROUP;
+            case 5 -> ADD_PRODUCT_TO_GROUP;
+            case 6 -> SET_PRICE;
+            default -> UNKNOWN;
+        };
     }
 }

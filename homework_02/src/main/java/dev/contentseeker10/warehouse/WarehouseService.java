@@ -5,16 +5,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class WarehouseService {
 
-    private final Map<Integer, ProductGroup> groups = new ConcurrentHashMap<>();
-    private final Map<Integer, Product> products = new ConcurrentHashMap<>();
+    private static final Map<Integer, ProductGroup> groups = new ConcurrentHashMap<>();
+    private static final Map<Integer, Product> products = new ConcurrentHashMap<>();
 
-    public boolean addProductGroup(String name, String description) {
+    public static boolean addProductGroup(String name, String description) {
         ProductGroup newGroup = new ProductGroup(name, description);
         groups.put(newGroup.getId(), newGroup);
         return true;
     }
 
-    public boolean addProductToGroup(int groupId, String name, String description, double price) {
+    public static boolean addProductToGroup(int groupId, String name, String description, double price) {
         ProductGroup group = groups.get(groupId);
         if (group == null)
             return false;
@@ -26,13 +26,13 @@ public class WarehouseService {
         return true;
     }
 
-    public int getProductAmount(int productId) {
+    public static int getProductAmount(int productId) {
         if (products.get(productId) == null)
             return -1;
         return products.get(productId).getAmount();
     }
 
-    public boolean writeOffProduct(int productId, int amount) {
+    public static boolean writeOffProduct(int productId, int amount) {
         Product product = products.get(productId);
         if (product == null || amount < 1)
             return false;
@@ -46,7 +46,7 @@ public class WarehouseService {
         return true;
     }
 
-    public boolean writeOnProduct(int productId, int amount) {
+    public static boolean writeOnProduct(int productId, int amount) {
         Product product = products.get(productId);
         if (product == null || amount < 1)
             return false;
@@ -57,7 +57,7 @@ public class WarehouseService {
         return true;
     }
 
-    public boolean setProductPrice(int productId, double price) {
+    public static boolean setProductPrice(int productId, double price) {
         Product product = products.get(productId);
         if (product == null || price < 0.0)
             return false;
