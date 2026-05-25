@@ -27,8 +27,8 @@ public class FakeSender implements Sender, Runnable {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                sendMessage(sendQueue.poll(), null);
-                Thread.sleep(500);
+                byte[] rawData = sendQueue.take();
+                sendMessage(rawData, null);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

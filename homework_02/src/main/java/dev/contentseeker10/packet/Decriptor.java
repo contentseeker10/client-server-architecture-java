@@ -66,8 +66,8 @@ public class Decriptor implements Runnable {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                outputQueue.put(decript(inputQueue.poll()));
-                Thread.sleep(500);
+                byte[] rawData = inputQueue.take();
+                outputQueue.put(decript(rawData));
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
