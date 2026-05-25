@@ -5,10 +5,19 @@ import dev.contentseeker10.crypto.CryptoService;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.BlockingQueue;
 
-public class Decriptor {
+public class Decriptor implements Runnable {
 
     public static final byte MAGIC = 0x13;
+
+    private BlockingQueue<byte[]> inputQueue;
+    private BlockingQueue<Message> outputQueue;
+
+    public Decriptor(BlockingQueue<byte[]> inputQueue, BlockingQueue<Message> outputQueue) {
+        this.inputQueue = inputQueue;
+        this.outputQueue = outputQueue;
+    }
 
     public static Message decript(byte[] data) {
         ByteBuffer packetBuffer = ByteBuffer.wrap(data);
@@ -53,4 +62,15 @@ public class Decriptor {
             throw new RuntimeException("Wrong Crc16. Message is corrupted.");
     }
 
+    @Override
+    public void run() {
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                outputQueue.put(decript(inputQueue.poll()));
+                Thread.sleep(500);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
