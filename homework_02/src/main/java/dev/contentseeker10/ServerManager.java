@@ -29,6 +29,13 @@ public class ServerManager {
 
     private final List<Thread> runningThreads = new ArrayList<>();
 
+    public boolean isPipelineEmpty() {
+        return rawQueue.isEmpty()
+                && decodedQueue.isEmpty()
+                && responseQueue.isEmpty()
+                && sendQueue.isEmpty();
+    }
+
     public void start(int receivers, int decriptors, int processors, int encriptors, int senders) {
         System.out.println("[SERVER] Starting server...");
         startRecievers(receivers);
@@ -96,4 +103,7 @@ public class ServerManager {
         System.out.println("[SERVER] Server stopped.");
     }
 
+    public BlockingQueue<byte[]> getRawQueue() {
+        return rawQueue;
+    }
 }
