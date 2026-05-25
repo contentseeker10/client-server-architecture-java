@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EncoderTest {
 
-    private Packet testPacket;
+    private Message testMessage;
     private final byte SOURCE = 5;
     private final long PACKET_ID = 987654321L;
     private final int CMD_TYPE = 10;
@@ -22,13 +22,13 @@ class EncoderTest {
 
     @BeforeEach
     void setUp() {
-        Message message = new Message(CMD_TYPE, USER_ID, PAYLOAD);
-        testPacket = new Packet(Encoder.MAGIC, SOURCE, PACKET_ID, message);
+        Payload payload = new Payload(CMD_TYPE, USER_ID, PAYLOAD);
+        testMessage = new Message(Encoder.MAGIC, SOURCE, PACKET_ID, payload);
     }
 
     @Test
     void shouldProduceCorrectArraySize() {
-        byte[] result = Encoder.encode(testPacket);
+        byte[] result = Encoder.encode(testMessage);
 
         int plainLen = 4 + 4 + PAYLOAD.getBytes(StandardCharsets.UTF_8).length;
         byte[] plainBytes = ByteBuffer.allocate(plainLen)
@@ -43,7 +43,7 @@ class EncoderTest {
 
     @Test
     void shouldEncodeHeaderFieldsCorrectly() {
-        byte[] result = Encoder.encode(testPacket);
+        byte[] result = Encoder.encode(testMessage);
 
         ByteBuffer buffer = ByteBuffer.wrap(result);
 
@@ -57,7 +57,7 @@ class EncoderTest {
 
     @Test
     void shouldCalculateHeaderCrcCorrectly() {
-        byte[] result = Encoder.encode(testPacket);
+        byte[] result = Encoder.encode(testMessage);
 
         ByteBuffer buffer = ByteBuffer.wrap(result);
         buffer.position(14);
@@ -71,7 +71,7 @@ class EncoderTest {
 
     @Test
     void shouldEmbedMessageCorrectly() {
-        byte[] result = Encoder.encode(testPacket);
+        byte[] result = Encoder.encode(testMessage);
         ByteBuffer buffer = ByteBuffer.wrap(result);
 
         buffer.position(10);
@@ -97,7 +97,7 @@ class EncoderTest {
 
     @Test
     void shouldAppendMessageCrcCorrectly() {
-        byte[] result = Encoder.encode(testPacket);
+        byte[] result = Encoder.encode(testMessage);
         ByteBuffer buffer = ByteBuffer.wrap(result);
 
         buffer.position(10);

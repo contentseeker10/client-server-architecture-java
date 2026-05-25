@@ -10,20 +10,20 @@ public class Encoder {
 
     public static final byte MAGIC = 0x13;
 
-    public static byte[] encode(Packet packet) {
-        byte[] payload = packet.getMessage().getPayload().getBytes(StandardCharsets.UTF_8);
+    public static byte[] encode(Message message) {
+        byte[] payload = message.getPayload().getData().getBytes(StandardCharsets.UTF_8);
         ByteBuffer messageBuffer = ByteBuffer.allocate(payload.length + 8);
-        messageBuffer.putInt(packet.getMessage().getCmdType());
-        messageBuffer.putInt(packet.getMessage().getUserId());
+        messageBuffer.putInt(message.getPayload().getCmdType());
+        messageBuffer.putInt(message.getPayload().getUserId());
         messageBuffer.put(payload);
 
         byte[] encryptedMessage = CryptoService.encrypt(messageBuffer.array());
         short messageCrc16 = Crc16.calculateSrc(encryptedMessage);
 
         ByteBuffer headerBuffer = ByteBuffer.allocate(1 + 1 + 8 + 4);
-        headerBuffer.put(packet.getMagic());
-        headerBuffer.put(packet.getSource());
-        headerBuffer.putLong(packet.getPacketId());
+        headerBuffer.put(message.getMagic());
+        headerBuffer.put(message.getSource());
+        headerBuffer.putLong(message.getMessageId());
         headerBuffer.putInt(encryptedMessage.length);
         short headerCrc16 = Crc16.calculateSrc(headerBuffer.array());
 

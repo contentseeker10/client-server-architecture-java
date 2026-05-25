@@ -1,35 +1,50 @@
 package dev.contentseeker10.packet;
 
+import java.nio.charset.StandardCharsets;
+
 public class Message {
 
-    private final int cmdType;
-    private final int userId;
+    private final byte magic;
+    private final byte source;
+    private final long messageId;
+    private final int length;
+    private final Payload payload;
 
-    private final String payload;
-
-    public Message(int cmdType, int userId, String payload) {
-        this.cmdType = cmdType;
-        this.userId = userId;
+    public Message(byte magic, byte source, long messageId, Payload payload) {
+        this.magic = magic;
+        this.source = source;
+        this.messageId = messageId;
+        this.length = payload.getData().getBytes(StandardCharsets.UTF_8).length;
         this.payload = payload;
     }
 
-    public int getCmdType() {
-        return cmdType;
+    public byte getMagic() {
+        return magic;
     }
 
-    public int getUserId() {
-        return userId;
+    public byte getSource() {
+        return source;
     }
 
-    public String getPayload() {
+    public long getMessageId() {
+        return messageId;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public Payload getPayload() {
         return payload;
     }
 
     @Override
     public String toString() {
         return "Message{" +
-                "cmdType=" + cmdType +
-                ", userId=" + userId +
+                "magic=" + magic +
+                "source=" + source +
+                ", packetId=" + messageId +
+                ", length=" + length +
                 ", payload=" + payload +
                 '}';
     }

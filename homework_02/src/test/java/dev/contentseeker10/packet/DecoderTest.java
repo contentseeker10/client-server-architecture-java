@@ -55,14 +55,14 @@ class DecoderTest {
 
     @Test
     void shouldValidDataReturnDecodedPacket() {
-        Packet result = Decoder.decode(fullData);
+        Message result = Decoder.decode(fullData);
 
         assertThat(result.getMagic()).isEqualTo(Decoder.MAGIC);
         assertThat(result.getSource()).isEqualTo(source);
-        assertThat(result.getPacketId()).isEqualTo(packetId);
-        assertThat(result.getMessage().getCmdType()).isEqualTo(cmdType);
-        assertThat(result.getMessage().getUserId()).isEqualTo(userId);
-        assertThat(result.getMessage().getPayload()).isEqualTo(payloadStr);
+        assertThat(result.getMessageId()).isEqualTo(packetId);
+        assertThat(result.getPayload().getCmdType()).isEqualTo(cmdType);
+        assertThat(result.getPayload().getUserId()).isEqualTo(userId);
+        assertThat(result.getPayload().getData()).isEqualTo(payloadStr);
     }
 
     @Test
@@ -82,7 +82,7 @@ class DecoderTest {
 
         assertThatThrownBy(() -> Decoder.decode(dataWithBadHeaderCrc))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("Wrong Crc16. Packet is corrupted.");
+                .hasMessage("Wrong Crc16. Message is corrupted.");
     }
 
     @Test
@@ -92,6 +92,6 @@ class DecoderTest {
 
         assertThatThrownBy(() -> Decoder.decode(dataWithBadMessageCrc))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("Wrong Crc16. Packet is corrupted.");
+                .hasMessage("Wrong Crc16. Message is corrupted.");
     }
 }

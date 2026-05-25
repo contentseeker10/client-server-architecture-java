@@ -10,7 +10,7 @@ public class Decoder {
 
     public static final byte MAGIC = 0x13;
 
-    public static Packet decode(byte[] data) {
+    public static Message decode(byte[] data) {
         ByteBuffer packetBuffer = ByteBuffer.wrap(data);
 
         byte magic = packetBuffer.get();
@@ -39,8 +39,8 @@ public class Decoder {
         messageBuffer.get(payloadBytes);
         String payload = new String(payloadBytes, StandardCharsets.UTF_8);
 
-        Message message = new Message(cmdType, userId, payload);
-        return new Packet(magic, source, packetId, message);
+        Payload message = new Payload(cmdType, userId, payload);
+        return new Message(magic, source, packetId, message);
     }
 
     private static void checkMagic(byte magic) {
@@ -50,7 +50,7 @@ public class Decoder {
 
     private static void checkCrc(short crc, byte[] data) {
         if (crc != Crc16.calculateSrc(data))
-            throw new RuntimeException("Wrong Crc16. Packet is corrupted.");
+            throw new RuntimeException("Wrong Crc16. Message is corrupted.");
     }
 
 }
