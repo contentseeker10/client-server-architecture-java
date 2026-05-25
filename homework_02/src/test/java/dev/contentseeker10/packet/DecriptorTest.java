@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-class DecoderTest {
+class DecriptorTest {
 
     private byte[] fullData;
 
@@ -36,7 +36,7 @@ class DecoderTest {
         int length = encryptedMessage.length;
 
         ByteBuffer headerBuf = ByteBuffer.allocate(14);
-        headerBuf.put(Decoder.MAGIC);
+        headerBuf.put(Decriptor.MAGIC);
         headerBuf.put(source);
         headerBuf.putLong(packetId);
         headerBuf.putInt(length);
@@ -55,9 +55,9 @@ class DecoderTest {
 
     @Test
     void shouldValidDataReturnDecodedPacket() {
-        Message result = Decoder.decode(fullData);
+        Message result = Decriptor.decript(fullData);
 
-        assertThat(result.getMagic()).isEqualTo(Decoder.MAGIC);
+        assertThat(result.getMagic()).isEqualTo(Decriptor.MAGIC);
         assertThat(result.getSource()).isEqualTo(source);
         assertThat(result.getMessageId()).isEqualTo(packetId);
         assertThat(result.getPayload().getCmdType()).isEqualTo(cmdType);
@@ -70,7 +70,7 @@ class DecoderTest {
         byte[] dataWithBadMagic = fullData.clone();
         dataWithBadMagic[0] = 0x00;
 
-        assertThatThrownBy(() -> Decoder.decode(dataWithBadMagic))
+        assertThatThrownBy(() -> Decriptor.decript(dataWithBadMagic))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Wrong magic number. Unknown packet.");
     }
@@ -80,7 +80,7 @@ class DecoderTest {
         byte[] dataWithBadHeaderCrc = fullData.clone();
         dataWithBadHeaderCrc[14] = (byte) ~dataWithBadHeaderCrc[14];
 
-        assertThatThrownBy(() -> Decoder.decode(dataWithBadHeaderCrc))
+        assertThatThrownBy(() -> Decriptor.decript(dataWithBadHeaderCrc))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Wrong Crc16. Message is corrupted.");
     }
@@ -90,7 +90,7 @@ class DecoderTest {
         byte[] dataWithBadMessageCrc = fullData.clone();
         dataWithBadMessageCrc[dataWithBadMessageCrc.length - 2] = (byte) ~dataWithBadMessageCrc[dataWithBadMessageCrc.length - 2];
 
-        assertThatThrownBy(() -> Decoder.decode(dataWithBadMessageCrc))
+        assertThatThrownBy(() -> Decriptor.decript(dataWithBadMessageCrc))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Wrong Crc16. Message is corrupted.");
     }

@@ -6,11 +6,11 @@ import dev.contentseeker10.crypto.CryptoService;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-public class Decoder {
+public class Decriptor {
 
     public static final byte MAGIC = 0x13;
 
-    public static Message decode(byte[] data) {
+    public static Message decript(byte[] data) {
         ByteBuffer packetBuffer = ByteBuffer.wrap(data);
 
         byte magic = packetBuffer.get();

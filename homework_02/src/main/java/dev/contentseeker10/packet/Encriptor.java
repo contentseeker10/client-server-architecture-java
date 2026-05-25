@@ -6,11 +6,11 @@ import dev.contentseeker10.crypto.CryptoService;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-public class Encoder {
+public class Encriptor {
 
     public static final byte MAGIC = 0x13;
 
-    public static byte[] encode(Message message) {
+    public static byte[] encript(Message message) {
         byte[] payload = message.getPayload().getData().getBytes(StandardCharsets.UTF_8);
         ByteBuffer messageBuffer = ByteBuffer.allocate(payload.length + 8);
         messageBuffer.putInt(message.getPayload().getCmdType());

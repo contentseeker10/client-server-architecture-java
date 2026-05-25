@@ -21,8 +21,8 @@ public class FakeReceiver implements Receiver, Runnable {
         CommandType[] types = CommandType.values();
         CommandType randomType = types[random.nextInt(types.length)];
         Payload payload = buildPayload(randomType);
-        Message message = new Message(Encoder.MAGIC, (byte) 1, packetIdSequence.incrementAndGet(), payload);
-        byte[] encodedData = Encoder.encode(message);
+        Message message = new Message(Encriptor.MAGIC, (byte) 1, packetIdSequence.incrementAndGet(), payload);
+        byte[] encodedData = Encriptor.encript(message);
         try {
             rawQueue.put(encodedData);
         } catch (InterruptedException e) {

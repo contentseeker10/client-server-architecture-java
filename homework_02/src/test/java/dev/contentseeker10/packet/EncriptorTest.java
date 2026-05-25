@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EncoderTest {
+class EncriptorTest {
 
     private Message testMessage;
     private final byte SOURCE = 5;
@@ -23,12 +23,12 @@ class EncoderTest {
     @BeforeEach
     void setUp() {
         Payload payload = new Payload(CMD_TYPE, USER_ID, PAYLOAD);
-        testMessage = new Message(Encoder.MAGIC, SOURCE, PACKET_ID, payload);
+        testMessage = new Message(Encriptor.MAGIC, SOURCE, PACKET_ID, payload);
     }
 
     @Test
     void shouldProduceCorrectArraySize() {
-        byte[] result = Encoder.encode(testMessage);
+        byte[] result = Encriptor.encript(testMessage);
 
         int plainLen = 4 + 4 + PAYLOAD.getBytes(StandardCharsets.UTF_8).length;
         byte[] plainBytes = ByteBuffer.allocate(plainLen)
@@ -42,12 +42,12 @@ class EncoderTest {
     }
 
     @Test
-    void shouldEncodeHeaderFieldsCorrectly() {
-        byte[] result = Encoder.encode(testMessage);
+    void shouldEncriptHeaderFieldsCorrectly() {
+        byte[] result = Encriptor.encript(testMessage);
 
         ByteBuffer buffer = ByteBuffer.wrap(result);
 
-        assertThat(buffer.get()).isEqualTo(Encoder.MAGIC);
+        assertThat(buffer.get()).isEqualTo(Encriptor.MAGIC);
         assertThat(buffer.get()).isEqualTo(SOURCE);
         assertThat(buffer.getLong()).isEqualTo(PACKET_ID);
 
@@ -57,7 +57,7 @@ class EncoderTest {
 
     @Test
     void shouldCalculateHeaderCrcCorrectly() {
-        byte[] result = Encoder.encode(testMessage);
+        byte[] result = Encriptor.encript(testMessage);
 
         ByteBuffer buffer = ByteBuffer.wrap(result);
         buffer.position(14);
@@ -71,7 +71,7 @@ class EncoderTest {
 
     @Test
     void shouldEmbedMessageCorrectly() {
-        byte[] result = Encoder.encode(testMessage);
+        byte[] result = Encriptor.encript(testMessage);
         ByteBuffer buffer = ByteBuffer.wrap(result);
 
         buffer.position(10);
@@ -97,7 +97,7 @@ class EncoderTest {
 
     @Test
     void shouldAppendMessageCrcCorrectly() {
-        byte[] result = Encoder.encode(testMessage);
+        byte[] result = Encriptor.encript(testMessage);
         ByteBuffer buffer = ByteBuffer.wrap(result);
 
         buffer.position(10);
