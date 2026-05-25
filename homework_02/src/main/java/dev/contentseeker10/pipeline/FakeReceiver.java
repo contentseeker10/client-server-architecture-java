@@ -10,7 +10,7 @@ public class FakeReceiver implements Receiver, Runnable {
 
     private final BlockingQueue<byte[]> outputQueue;
 
-    private final AtomicLong packetIdSequence = new AtomicLong(0);
+    private static final AtomicLong packetIdSequence = new AtomicLong(0);
 
     public FakeReceiver(BlockingQueue<byte[]> outputQueue) {
         this.outputQueue = outputQueue;
