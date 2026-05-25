@@ -14,4 +14,4 @@ Fix of concurrency logic of Tik-Tak-Toy program
 
 ### Homework 2:
 
-Warehouse Service pipeline via custom Packets (no-network)
+**Scaling Concurrent server pipeline** with **Warehouse processing Service** (no-network, fake receiver/sender)
