@@ -15,10 +15,10 @@ public class WarehouseService {
     }
 
     public boolean addProductToGroup(int groupId, String name, String description, double price) {
-        if (groups.get(groupId) == null)
+        ProductGroup group = groups.get(groupId);
+        if (group == null)
             return false;
         Product newProduct = new Product(name, description, 0, price);
-        ProductGroup group = groups.get(groupId);
         synchronized (group) {
             group.getProductsList().add(newProduct);
         }
@@ -33,13 +33,13 @@ public class WarehouseService {
     }
 
     public boolean writeOffProduct(int productId, int amount) {
-        if (products.get(productId) == null)
-            return false;
         Product product = products.get(productId);
+        if (product == null || amount < 1)
+            return false;
         synchronized (product) {
             int productAmount = product.getAmount();
-            if (amount >= productAmount)
-                product.setAmount(0);
+            if (amount > productAmount)
+                return false;
             else
                 product.setAmount(productAmount - amount);
         }
@@ -47,9 +47,9 @@ public class WarehouseService {
     }
 
     public boolean writeOnProduct(int productId, int amount) {
-        if (products.get(productId) == null)
-            return false;
         Product product = products.get(productId);
+        if (product == null || amount < 1)
+            return false;
         synchronized (product) {
             int productAmount = product.getAmount();
             product.setAmount(productAmount + amount);
@@ -58,9 +58,9 @@ public class WarehouseService {
     }
 
     public boolean setProductPrice(int productId, double price) {
-        if (products.get(productId) == null || price < 0.0)
-            return false;
         Product product = products.get(productId);
+        if (product == null || price < 0.0)
+            return false;
         synchronized (product) {
             product.setPrice(price);
         }
