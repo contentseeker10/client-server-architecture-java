@@ -10,14 +10,14 @@ public class Product {
     private String name;
     private String description;
 
-    private int quantity;
-    private double price;
+    private volatile int amount;
+    private volatile double price;
 
-    public Product(String name, String description, int quantity, double price) {
+    public Product(String name, String description, int amount, double price) {
         this.id = idSequence.incrementAndGet();
         this.name = name;
         this.description = description;
-        this.quantity = quantity;
+        this.amount = amount;
         this.price = price;
     }
 
@@ -41,12 +41,12 @@ public class Product {
         this.description = description;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public double getPrice() {
@@ -63,7 +63,7 @@ public class Product {
                 "\n\tid: " + id +
                 "\n\tname: '" + name + '\'' +
                 "\n\tdescription: '" + description + '\'' +
-                "\n\tquantity: " + quantity +
+                "\n\tamount: " + amount +
                 "\n\tprice: " + price +
                 "\n}";
     }
