@@ -5,10 +5,19 @@ import dev.contentseeker10.crypto.CryptoService;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.BlockingQueue;
 
-public class Encriptor {
+public class Encriptor implements Runnable {
 
     public static final byte MAGIC = 0x13;
+
+    private BlockingQueue<Message> inputQueue;
+    private BlockingQueue<byte[]> outputQueue;
+
+    public Encriptor(BlockingQueue<Message> inputQueue, BlockingQueue<byte[]> outputQueue) {
+        this.inputQueue = inputQueue;
+        this.outputQueue = outputQueue;
+    }
 
     public static byte[] encript(Message message) {
         byte[] payload = message.getPayload().getData().getBytes(StandardCharsets.UTF_8);
@@ -49,4 +58,15 @@ public class Encriptor {
                 + messageLength;
     }
 
+    @Override
+    public void run() {
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                Message response = inputQueue.take();
+                outputQueue.put(encript(response));
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
