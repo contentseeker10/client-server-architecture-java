@@ -16,6 +16,14 @@ public class WarehouseService {
     private final Map<Integer, ProductGroup> groups = new ConcurrentHashMap<>();
     private final Map<Integer, Product> products = new ConcurrentHashMap<>();
 
+    public Map<Integer, ProductGroup> getGroups() {
+        return groups;
+    }
+
+    public Map<Integer, Product> getProducts() {
+        return products;
+    }
+
     public boolean addProductGroup(String name, String description) {
         ProductGroup newGroup = new ProductGroup(name, description);
         groups.put(newGroup.getId(), newGroup);

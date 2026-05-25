@@ -49,6 +49,10 @@ public class ProductGroup {
         this.productsList = productsList;
     }
 
+    public static void resetIdSequence() {
+        idSequence.set(0);
+    }
+
     @Override
     public String toString() {
         return '{' +

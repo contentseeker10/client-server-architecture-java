@@ -57,6 +57,10 @@ public class Product {
         this.price = price;
     }
 
+    public static void resetIdSequence() {
+        idSequence.set(0);
+    }
+
     @Override
     public String toString() {
         return "{" +
