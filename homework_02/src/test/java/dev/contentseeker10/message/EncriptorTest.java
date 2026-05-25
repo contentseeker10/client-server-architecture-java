@@ -1,7 +1,8 @@
-package dev.contentseeker10.packet;
+package dev.contentseeker10.message;
 
 import dev.contentseeker10.crypto.Crc16;
 import dev.contentseeker10.crypto.CryptoService;
+import dev.contentseeker10.pipeline.Encriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

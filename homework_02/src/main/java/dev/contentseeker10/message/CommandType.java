@@ -1,4 +1,4 @@
-package dev.contentseeker10.packet;
+package dev.contentseeker10.message;
 
 public enum CommandType {
     UNKNOWN(-1),

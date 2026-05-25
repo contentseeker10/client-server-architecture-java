@@ -1,7 +1,8 @@
-package dev.contentseeker10.packet;
+package dev.contentseeker10.pipeline;
 
 import dev.contentseeker10.crypto.Crc16;
 import dev.contentseeker10.crypto.CryptoService;
+import dev.contentseeker10.message.Message;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -11,8 +12,8 @@ public class Encriptor implements Runnable {
 
     public static final byte MAGIC = 0x13;
 
-    private BlockingQueue<Message> inputQueue;
-    private BlockingQueue<byte[]> outputQueue;
+    private final BlockingQueue<Message> inputQueue;
+    private final BlockingQueue<byte[]> outputQueue;
 
     public Encriptor(BlockingQueue<Message> inputQueue, BlockingQueue<byte[]> outputQueue) {
         this.inputQueue = inputQueue;

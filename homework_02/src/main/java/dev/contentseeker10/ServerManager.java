@@ -1,8 +1,8 @@
 package dev.contentseeker10;
 
-import dev.contentseeker10.packet.Decriptor;
-import dev.contentseeker10.packet.Encriptor;
-import dev.contentseeker10.packet.Message;
+import dev.contentseeker10.pipeline.Decriptor;
+import dev.contentseeker10.pipeline.Encriptor;
+import dev.contentseeker10.message.Message;
 import dev.contentseeker10.pipeline.FakeReceiver;
 import dev.contentseeker10.pipeline.FakeSender;
 import dev.contentseeker10.pipeline.Processor;

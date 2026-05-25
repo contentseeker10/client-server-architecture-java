@@ -1,4 +1,4 @@
-package dev.contentseeker10.packet;
+package dev.contentseeker10.message;
 
 import java.nio.charset.StandardCharsets;
 

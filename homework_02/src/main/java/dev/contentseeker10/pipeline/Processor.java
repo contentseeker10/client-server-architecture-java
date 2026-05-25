@@ -1,16 +1,16 @@
 package dev.contentseeker10.pipeline;
 
-import dev.contentseeker10.packet.CommandType;
-import dev.contentseeker10.packet.Message;
-import dev.contentseeker10.packet.Payload;
+import dev.contentseeker10.message.CommandType;
+import dev.contentseeker10.message.Message;
+import dev.contentseeker10.message.Payload;
 import dev.contentseeker10.warehouse.WarehouseService;
 
 import java.util.concurrent.BlockingQueue;
 
 public class Processor implements Runnable {
 
-    private BlockingQueue<Message> inputQueue;
-    private BlockingQueue<Message> outputQueue;
+    private final BlockingQueue<Message> inputQueue;
+    private final BlockingQueue<Message> outputQueue;
 
     private static final String MSG_OK = "OK";
     private static final String MSG_FAIL = "FAIL";

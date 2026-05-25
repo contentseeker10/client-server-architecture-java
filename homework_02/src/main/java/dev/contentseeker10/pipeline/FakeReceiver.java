@@ -1,6 +1,6 @@
 package dev.contentseeker10.pipeline;
 
-import dev.contentseeker10.packet.*;
+import dev.contentseeker10.message.*;
 
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -8,23 +8,23 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeReceiver implements Receiver, Runnable {
 
-    private BlockingQueue<byte[]> rawQueue;
+    private final BlockingQueue<byte[]> outputQueue;
 
     private final AtomicLong packetIdSequence = new AtomicLong(0);
 
-    public FakeReceiver(BlockingQueue<byte[]> rawQueue) {
-        this.rawQueue = rawQueue;
+    public FakeReceiver(BlockingQueue<byte[]> outputQueue) {
+        this.outputQueue = outputQueue;
     }
 
     @Override
     public void receiveMessage() {
         CommandType[] types = CommandType.values();
-        CommandType randomType = types[random.nextInt(types.length)];
+        CommandType randomType = types[1 + random.nextInt(1, 6)];
         Payload payload = buildPayload(randomType);
         Message message = new Message(Encriptor.MAGIC, (byte) 1, packetIdSequence.incrementAndGet(), payload);
         byte[] encodedData = Encriptor.encript(message);
         try {
-            rawQueue.put(encodedData);
+            outputQueue.put(encodedData);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -39,6 +39,7 @@ public class FakeReceiver implements Receiver, Runnable {
             case ADD_GROUP -> generateAddGroupPayload();
             case ADD_PRODUCT_TO_GROUP -> generateAddProductToGroupPayload();
             case SET_PRICE -> generateSetPricePayload();
+            default -> "null";
         };
         return new Payload(randomType.getCode(), userId, payload);
     }

@@ -1,17 +1,16 @@
 package dev.contentseeker10.pipeline;
 
-import dev.contentseeker10.packet.Decriptor;
-import dev.contentseeker10.packet.Message;
+import dev.contentseeker10.message.Message;
 
 import java.net.InetAddress;
 import java.util.concurrent.BlockingQueue;
 
 public class FakeSender implements Sender, Runnable {
 
-    private BlockingQueue<byte[]> sendQueue;
+    private final BlockingQueue<byte[]> inputQueue;
 
-    public FakeSender(BlockingQueue<byte[]> sendQueue) {
-        this.sendQueue = sendQueue;
+    public FakeSender(BlockingQueue<byte[]> inputQueue) {
+        this.inputQueue = inputQueue;
     }
 
     @Override
@@ -19,7 +18,7 @@ public class FakeSender implements Sender, Runnable {
         Message response = Decriptor.decript(mess);
         System.out.println("[SENDER] Sent response for Message ID: "
                         + response.getMessageId()
-                        + "Status: "
+                        + " Status: "
                         + response.getPayload().getData());
     }
 
@@ -27,7 +26,7 @@ public class FakeSender implements Sender, Runnable {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                byte[] rawData = sendQueue.take();
+                byte[] rawData = inputQueue.take();
                 sendMessage(rawData, null);
             }
         } catch (InterruptedException e) {

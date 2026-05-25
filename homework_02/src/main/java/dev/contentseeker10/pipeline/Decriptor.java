@@ -1,7 +1,9 @@
-package dev.contentseeker10.packet;
+package dev.contentseeker10.pipeline;
 
 import dev.contentseeker10.crypto.Crc16;
 import dev.contentseeker10.crypto.CryptoService;
+import dev.contentseeker10.message.Message;
+import dev.contentseeker10.message.Payload;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -11,8 +13,8 @@ public class Decriptor implements Runnable {
 
     public static final byte MAGIC = 0x13;
 
-    private BlockingQueue<byte[]> inputQueue;
-    private BlockingQueue<Message> outputQueue;
+    private final BlockingQueue<byte[]> inputQueue;
+    private final BlockingQueue<Message> outputQueue;
 
     public Decriptor(BlockingQueue<byte[]> inputQueue, BlockingQueue<Message> outputQueue) {
         this.inputQueue = inputQueue;
