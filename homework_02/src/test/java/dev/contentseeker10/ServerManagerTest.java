@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ServerManagerTest {
 
+    private static final Random random = new Random();
+
     private static final int THREADS = 10;
     private static final int ACTIONS = 10;
 
@@ -45,8 +47,38 @@ class ServerManagerTest {
     }
 
     @Test
+    void shouldAddProductsConcurrentlyCorrect() throws InterruptedException {
+        AtomicInteger messageId = new AtomicInteger(0);
+
+        CountDownLatch latch = new CountDownLatch(THREADS);
+
+        for (int i = 0; i < THREADS; i++) {
+            new Thread(() -> {
+                try {
+                    for (int j = 0; j < ACTIONS; j++) {
+                        Payload payload = new Payload(CommandType.ADD_PRODUCT_TO_GROUP.getCode(), random.nextInt(100) + 1, "1,Product_" + messageId + ",some description,99.99");
+                        Message msg = new Message((byte) 0x13, (byte) 1, messageId.incrementAndGet(), payload);
+                        ServerManager.getInstance().getRawQueue().put(Encriptor.encript(msg));
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    latch.countDown();
+                }
+            }).start();
+        }
+
+        latch.await(5, TimeUnit.SECONDS);
+
+        while (!ServerManager.getInstance().isPipelineEmpty()) {
+            Thread.sleep(50);
+        }
+
+        assertThat(WarehouseService.getInstance().getGroups().get(1).getProductsList().size()).isEqualTo(101);
+    }
+
+    @Test
     void shouldWriteOffProductConcurrently() throws InterruptedException {
-        Random random = new Random();
         AtomicInteger messageId = new AtomicInteger(0);
 
         CountDownLatch latch = new CountDownLatch(THREADS);
