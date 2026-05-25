@@ -5,16 +5,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class WarehouseService {
 
-    private static final Map<Integer, ProductGroup> groups = new ConcurrentHashMap<>();
-    private static final Map<Integer, Product> products = new ConcurrentHashMap<>();
+    private static final WarehouseService INSTANCE = new WarehouseService();
 
-    public static boolean addProductGroup(String name, String description) {
+    private WarehouseService() {}
+
+    public static WarehouseService getInstance() {
+        return INSTANCE;
+    }
+
+    private final Map<Integer, ProductGroup> groups = new ConcurrentHashMap<>();
+    private final Map<Integer, Product> products = new ConcurrentHashMap<>();
+
+    public boolean addProductGroup(String name, String description) {
         ProductGroup newGroup = new ProductGroup(name, description);
         groups.put(newGroup.getId(), newGroup);
         return true;
     }
 
-    public static boolean addProductToGroup(int groupId, String name, String description, double price) {
+    public boolean addProductToGroup(int groupId, String name, String description, double price) {
         ProductGroup group = groups.get(groupId);
         if (group == null)
             return false;
@@ -26,13 +34,13 @@ public class WarehouseService {
         return true;
     }
 
-    public static int getProductAmount(int productId) {
+    public int getProductAmount(int productId) {
         if (products.get(productId) == null)
             return -1;
         return products.get(productId).getAmount();
     }
 
-    public static boolean writeOffProduct(int productId, int amount) {
+    public boolean writeOffProduct(int productId, int amount) {
         Product product = products.get(productId);
         if (product == null || amount < 1)
             return false;
@@ -46,7 +54,7 @@ public class WarehouseService {
         return true;
     }
 
-    public static boolean writeOnProduct(int productId, int amount) {
+    public boolean writeOnProduct(int productId, int amount) {
         Product product = products.get(productId);
         if (product == null || amount < 1)
             return false;
@@ -57,7 +65,7 @@ public class WarehouseService {
         return true;
     }
 
-    public static boolean setProductPrice(int productId, double price) {
+    public boolean setProductPrice(int productId, double price) {
         Product product = products.get(productId);
         if (product == null || price < 0.0)
             return false;
